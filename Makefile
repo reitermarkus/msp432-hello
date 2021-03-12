@@ -18,8 +18,8 @@ release:
 	"$(OBJCOPY)" -O binary target/$(TARGET)/release/msp432-newio target/$(TARGET)/release/msp432-newio.bin
 
 .PHONY: flash
-flash:
-	dslite --config=MSP432P401R.ccxml --verbose --flash --verify target/$(TARGET)/debug/msp432-newio.bin
+flash: debug
+	dslite --config MSP432P401R.ccxml --verbose --flash --verify target/$(TARGET)/debug/msp432-newio.bin,0x0
 
 .PHONY: run
 run: flash
