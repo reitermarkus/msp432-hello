@@ -1,4 +1,5 @@
 TOOLCHAIN_BIN ?= /Applications/TI/ccs/tools/compiler/gcc-arm-none-eabi-7-2017-q4-major/bin
+
 LD = $(TOOLCHAIN_BIN)/arm-none-eabi-ld
 OBJCOPY = $(TOOLCHAIN_BIN)/arm-none-eabi-objcopy
 
@@ -23,6 +24,10 @@ flash: debug
 
 .PHONY: run
 run: flash
+
+.PHONY: gdb
+gdb: debug
+	 $(TOOLCHAIN_BIN)/arm-none-eabi-gdb -q -x debug.gdb ./target/$(TARGET)/debug/msp432-newio
 
 .PHONY: clean
 clean:

@@ -9,6 +9,9 @@ msp432p401r-pac = "0.1.0"
 cortex-m = "0.7.1"
 cortex-m-rt = "0.6.11"
 panic-abort = "0.3.2"
+msp432p401r-hal = { version = "0.1.0", git = "https://github.com/msp432-rust/msp432p401r-hal", branch = "gpio" }
+cortex-m-semihosting = "0.3.7"
+embedded-hal = "0.2.4"
 
 [profile.release]
 debug = true

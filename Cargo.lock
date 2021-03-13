@@ -65,7 +65,7 @@ checksum = "643a210c1bdc23d0db511e2a576082f4ff4dcae9d0c37f50b431b8f8439d6d6b"
 dependencies = [
  "bare-metal 0.2.5",
  "bitfield",
- "embedded-hal",
+ "embedded-hal 0.2.4",
  "volatile-register",
 ]
 
@@ -91,6 +91,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "cortex-m-semihosting"
+version = "0.3.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6bffa6c1454368a6aa4811ae60964c38e6996d397ff8095a8b9211b1c1f749bc"
+dependencies = [
+ "cortex-m 0.7.2",
+]
+
+[[package]]
 name = "embedded-hal"
 version = "0.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -98,6 +107,15 @@ checksum = "fa998ce59ec9765d15216393af37a58961ddcefb14c753b4816ba2191d865fcb"
 dependencies = [
  "nb 0.1.3",
  "void",
+]
+
+[[package]]
+name = "embedded-hal"
+version = "1.0.0-alpha.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f2260cabeacf4bda1df1a8d54f67047a9aadf02fe14cfab07649f2cec6a4693b"
+dependencies = [
+ "nb 1.0.0",
 ]
 
 [[package]]
@@ -134,8 +152,22 @@ version = "0.1.0"
 dependencies = [
  "cortex-m 0.7.2",
  "cortex-m-rt",
+ "cortex-m-semihosting",
+ "embedded-hal 0.2.4",
+ "msp432p401r-hal",
  "msp432p401r-pac",
  "panic-abort",
+]
+
+[[package]]
+name = "msp432p401r-hal"
+version = "0.1.0"
+source = "git+https://github.com/msp432-rust/msp432p401r-hal?branch=gpio#5979ad399559a238c92f894b3c4c7efee4055710"
+dependencies = [
+ "cortex-m 0.6.7",
+ "cortex-m-rt",
+ "embedded-hal 1.0.0-alpha.4",
+ "msp432p401r-pac",
 ]
 
 [[package]]
