@@ -14,11 +14,11 @@ pub use panic_abort;
 #[entry]
 fn main() -> ! {
   // Disable watchdog timer.
-  let mut watchdog = WatchdogTimer::<Enabled>::new();
+  let watchdog = WatchdogTimer::<Enabled>::new();
   watchdog.try_disable().unwrap();
 
   let mut peripherals = cortex_m::Peripherals::take().unwrap();
-  let ahb_frequency = 300_0000;
+  let ahb_frequency = 3_000_000;
   let mut timer = cortex_m::delay::Delay::new(peripherals.SYST, ahb_frequency);
 
   let p = msp432p401r::Peripherals::take().unwrap();
