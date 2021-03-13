@@ -8,9 +8,16 @@ TARGET_UPPERCASE = $(shell echo $(TARGET) | tr [:lower:] [:upper:] | tr - _)
 
 export CARGO_TARGET_$(TARGET_UPPERCASE)_LINKER = $(LD)
 
+.PHONY: all
+all: debug
+
+.PHONY: doc
+doc:
+	cargo doc --target $(TARGET) --open
+
 .PHONY: debug
 debug:
-	cargo build --target $(TARGET) -vvv
+	cargo build --target $(TARGET)
 	"$(OBJCOPY)" -O binary target/$(TARGET)/debug/msp432-newio target/$(TARGET)/debug/msp432-newio.bin
 
 .PHONY: release

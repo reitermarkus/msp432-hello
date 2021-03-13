@@ -162,10 +162,11 @@ dependencies = [
 [[package]]
 name = "msp432p401r-hal"
 version = "0.1.0"
-source = "git+https://github.com/msp432-rust/msp432p401r-hal?branch=gpio#5979ad399559a238c92f894b3c4c7efee4055710"
+source = "git+https://github.com/msp432-rust/msp432p401r-hal?rev=f7a1d424bebdcfa61452c5f76a7709e61ee97875#f7a1d424bebdcfa61452c5f76a7709e61ee97875"
 dependencies = [
  "cortex-m 0.6.7",
  "cortex-m-rt",
+ "cortex-m-semihosting",
  "embedded-hal 1.0.0-alpha.4",
  "msp432p401r-pac",
 ]
