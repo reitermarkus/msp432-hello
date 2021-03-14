@@ -6,7 +6,7 @@ use cortex_m::prelude::*;
 use cortex_m_semihosting::hprintln;
 
 use msp432p401r_hal::watchdog::{WatchdogTimer, Enabled, Disable};
-use msp432p401r_hal::{gpio::{GpioExt, InputPin, OutputPin, ToggleableOutputPin}};
+use msp432p401r_hal::{clock::{CsExt, DcoclkFreqSel, DIVM_A, DIVS_A}, gpio::{GpioExt, InputPin, OutputPin, ToggleableOutputPin}};
 
 use panic_abort as _;
 
@@ -24,6 +24,13 @@ fn main() -> ! {
 
   // The Digital I/O module
   let dio = p.DIO.split();
+
+  let cs = p.CS.constrain();
+
+  let _clocks = cs.mclk_dcoclk( DcoclkFreqSel::_48MHz, DIVM_A::DIVM_0)
+    .smclk_div(DIVS_A::DIVS_1)
+    .freeze();
+
 
   hprintln!("Started.").unwrap();
 
