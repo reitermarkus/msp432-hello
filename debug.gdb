@@ -12,3 +12,6 @@ break main
 
 # Start execution.
 continue
+
+# Don't confirm to quit.
+set confirm off
