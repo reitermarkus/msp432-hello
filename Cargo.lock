@@ -162,7 +162,7 @@ dependencies = [
 [[package]]
 name = "msp432p401r-hal"
 version = "0.1.0"
-source = "git+https://github.com/msp432-rust/msp432p401r-hal?rev=f7a1d424bebdcfa61452c5f76a7709e61ee97875#f7a1d424bebdcfa61452c5f76a7709e61ee97875"
+source = "git+https://github.com/reitermarkus/msp432p401r-hal?branch=dev#b6b6d6b2854bd08c8ea287341246989dc91093a7"
 dependencies = [
  "cortex-m 0.6.7",
  "cortex-m-rt",
@@ -260,9 +260,9 @@ checksum = "a8f112729512f8e442d81f95a8a7ddf2b7c6b8a1a6f509a95864142b30cab2d3"
 
 [[package]]
 name = "syn"
-version = "1.0.63"
+version = "1.0.64"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8fd9bc7ccc2688b3344c2f48b9b546648b25ce0b20fc717ee7fa7981a8ca9717"
+checksum = "3fd9d1e9976102a03c542daa2eff1b43f9d72306342f3f8b3ed5fb8908195d6f"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -271,9 +271,9 @@ dependencies = [
 
 [[package]]
 name = "typenum"
-version = "1.12.0"
+version = "1.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "373c8a200f9e67a0c95e62a4f52fbf80c23b4381c05a17845531982fa99e6b33"
+checksum = "879f6906492a7cd215bfa4cf595b600146ccfac0c79bcbd1f3000162af5e8b06"
 
 [[package]]
 name = "unicode-xid"

@@ -6,9 +6,9 @@ use cortex_m::prelude::*;
 use cortex_m_semihosting::hprintln;
 
 use msp432p401r_hal::watchdog::{WatchdogTimer, Enabled, Disable};
-use msp432p401r_hal::{gpio::{self, GPIO, FloatingInput, InputPin, OutputPin, ToggleableOutputPin}};
+use msp432p401r_hal::{gpio::{GpioExt, InputPin, OutputPin, ToggleableOutputPin}};
 
-pub use panic_abort;
+use panic_abort as _;
 
 #[entry]
 fn main() -> ! {
@@ -20,10 +20,10 @@ fn main() -> ! {
   let ahb_frequency = 3_000_000;
   let mut timer = cortex_m::delay::Delay::new(peripherals.SYST, ahb_frequency);
 
-  // let p = msp432p401r::Peripherals::take().unwrap();
+  let p = msp432p401r::Peripherals::take().unwrap();
 
   // The Digital I/O module
-  // let dio = p.DIO;
+  let dio = p.DIO.split();
 
   hprintln!("Started.").unwrap();
 
@@ -32,18 +32,18 @@ fn main() -> ! {
   // on P2.1 and P2.2. Simply set the direction register bit
   // to 1 and write a 1 to the output register to put ON the LED.
 
-  let mut led1 = gpio::porta::P1_0::<GPIO<FloatingInput>>::into_output();
+  let mut led1 = dio.p1_0.into_output();
   led1.try_set_low().unwrap();
 
-  let mut rgbled_red = gpio::porta::P2_0::<GPIO<FloatingInput>>::into_output();
+  let mut rgbled_red = dio.p2_0.into_output();
   rgbled_red.try_set_high().unwrap();
-  let mut rgbled_green = gpio::porta::P2_1::<GPIO<FloatingInput>>::into_output();
+  let mut rgbled_green = dio.p2_1.into_output();
   rgbled_green.try_set_high().unwrap();
-  let mut rgbled_blue = gpio::porta::P2_2::<GPIO<FloatingInput>>::into_output();
+  let mut rgbled_blue = dio.p2_2.into_output();
   rgbled_blue.try_set_high().unwrap();
 
-  let button1 = gpio::porta::P1_4::<GPIO<FloatingInput>>::into_pulled_up_input();
-  let button2 = gpio::porta::P1_1::<GPIO<FloatingInput>>::into_pulled_up_input();
+  let button1 = dio.p1_4.into_pull_up_input();
+  let button2 = dio.p1_1.into_pull_up_input();
 
   loop {
     hprintln!("Loop.").unwrap();
