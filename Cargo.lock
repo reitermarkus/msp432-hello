@@ -162,7 +162,7 @@ dependencies = [
 [[package]]
 name = "msp432p401r-hal"
 version = "0.1.0"
-source = "git+https://github.com/reitermarkus/msp432p401r-hal?branch=dev#b6b6d6b2854bd08c8ea287341246989dc91093a7"
+source = "git+https://github.com/reitermarkus/msp432p401r-hal?branch=dev#2d1094b948ce01681c01d1035aca4b204770e963"
 dependencies = [
  "cortex-m 0.6.7",
  "cortex-m-rt",
@@ -289,9 +289,9 @@ checksum = "77439c1b53d2303b20d9459b1ade71a83c716e3f9c34f3228c00e6f185d6c002"
 
 [[package]]
 name = "version_check"
-version = "0.9.2"
+version = "0.9.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b5a972e5669d67ba988ce3dc826706fb0a8b01471c088cb0b6110b805cc36aed"
+checksum = "5fecdca9a5291cc2b8dcf7dc02453fee791a280f3743cb0905f8822ae463b3fe"
 
 [[package]]
 name = "void"

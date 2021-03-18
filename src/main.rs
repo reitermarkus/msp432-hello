@@ -83,7 +83,6 @@ fn main() -> ! {
 
     color = (color + 1) % 6;
 
-
     // hprintln!("Button 1: {}", button1.try_is_low().unwrap()).unwrap();
     // hprintln!("Button 2: {}", button2.try_is_low().unwrap()).unwrap();
 

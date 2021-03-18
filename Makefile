@@ -1,10 +1,4 @@
-TOOLCHAIN_BIN ?= /Applications/TI/ccs/tools/compiler/gcc-arm-none-eabi-7-2017-q4-major/bin
-
 TARGET = thumbv7em-none-eabihf
-TARGET_UPPERCASE = $(shell echo $(TARGET) | tr [:lower:] [:upper:] | tr - _)
-
-export CARGO_TARGET_$(TARGET_UPPERCASE)_LINKER = $(TOOLCHAIN_BIN)/arm-none-eabi-ld
-export CARGO_TARGET_$(TARGET_UPPERCASE)_RUNNER = $(TOOLCHAIN_BIN)/arm-none-eabi-gdb -q -x debug.gdb
 
 .PHONY: all
 all: debug
@@ -32,9 +26,7 @@ dslite: release
 
 .PHONY: run
 run: debug
-	 openocd &
-	 cargo run --target $(TARGET) || true
-	 killall openocd
+	 cargo run --target $(TARGET)
 
 .PHONY: clean
 clean:
