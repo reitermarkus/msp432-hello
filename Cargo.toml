@@ -1,7 +1,7 @@
 [package]
-name = "msp432-newio"
+name = "msp432-hello"
 version = "0.1.0"
-authors = ["Pramode <mail@pramode.in>"]
+authors = ["Markus Reiter <me@reitermark.us>"]
 edition = "2018"
 
 [dependencies]

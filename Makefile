@@ -17,12 +17,12 @@ release:
 
 .PHONY: flash
 flash: release
-	openocd -f 'openocd.cfg' -c 'init' -c 'reset halt' -c 'flash write_image erase target/$(TARGET)/release/msp432-newio 0x0' -c 'reset run' -c 'shutdown'
+	openocd -f 'openocd.cfg' -c 'init' -c 'reset halt' -c 'flash write_image erase target/$(TARGET)/release/msp432-hello 0x0' -c 'reset run' -c 'shutdown'
 
 .PHONY: dslite
 dslite: release
-	"$(TOOLCHAIN_BIN)/arm-none-eabi-objcopy" -O binary target/$(TARGET)/release/msp432-newio target/$(TARGET)/release/msp432-newio.bin
-	dslite --config MSP432P401R.ccxml --verbose --flash --verify target/$(TARGET)/release/msp432-newio.bin,0x0
+	"$(TOOLCHAIN_BIN)/arm-none-eabi-objcopy" -O binary target/$(TARGET)/release/msp432-hello target/$(TARGET)/release/msp432-hello.bin
+	dslite --config MSP432P401R.ccxml --verbose --flash --verify target/$(TARGET)/release/msp432-hello.bin,0x0
 
 .PHONY: run
 run: debug

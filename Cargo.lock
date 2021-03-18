@@ -147,7 +147,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "msp432-newio"
+name = "msp432-hello"
 version = "0.1.0"
 dependencies = [
  "cortex-m 0.7.2",
