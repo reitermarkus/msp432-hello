@@ -5,9 +5,9 @@ use cortex_m_rt::entry;
 use cortex_m::prelude::*;
 use cortex_m_semihosting::hprintln;
 
-use msp432p401r::{interrupt, CS};
+use msp432p401r::interrupt;
 use msp432p401r_hal::watchdog::{WatchdogTimer, Enabled, Disable};
-use msp432p401r_hal::{flash::{FlashConfig, FlcDefined, FlWaitSts}, clock::{CsExt, DcoclkFreqSel, DIVM_A, DIVS_A}, gpio::{Edge, Input, PullUp, GpioExt, InputPin, OutputPin, StatefulOutputPin, ToggleableOutputPin}, pcm::{PcmConfig, PcmDefined, VCoreSel}};
+use msp432p401r_hal::{flash::{FlashConfig, FlcDefined, FlWaitSts}, clock::{CsExt, DcoclkFreqSel, DIVM_A, DIVS_A}, gpio::{Edge, Input, PullUp, GpioExt, OutputPin, StatefulOutputPin, ToggleableOutputPin}, pcm::{PcmConfig, PcmDefined, VCoreSel}};
 
 use panic_abort as _;
 
@@ -58,7 +58,6 @@ fn main() -> ! {
   let flctl = FlashConfig::<FlcDefined>::new();         // Setup FlashConfig
   flctl.set_flwaitst(FlWaitSts::_2Ws);                                       // Two wait states -> 48 Mhz Clock
 
-
   let p = msp432p401r::Peripherals::take().unwrap();
 
   // The Digital I/O module
@@ -75,7 +74,7 @@ fn main() -> ! {
   let ahb_frequency = freq_sel.freq();
   let mut timer = cortex_m::delay::Delay::new(peripherals.SYST, ahb_frequency);
 
-  #[cfg(debug)]
+  #[cfg(debug_assertions)]
   hprintln!("Started.").unwrap();
 
   // PORTA consists of two ports P1 and P2. Red LED of the
