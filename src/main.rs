@@ -5,11 +5,43 @@ use cortex_m_rt::entry;
 use cortex_m::prelude::*;
 use cortex_m_semihosting::hprintln;
 
-use msp432p401r::CS;
+use msp432p401r::{interrupt, CS};
 use msp432p401r_hal::watchdog::{WatchdogTimer, Enabled, Disable};
-use msp432p401r_hal::{clock::{CsExt, DcoclkFreqSel, DIVM_A, DIVS_A}, gpio::{GpioExt, InputPin, OutputPin, ToggleableOutputPin}, pcm::{PcmConfig, PcmDefined, VCoreSel}};
+use msp432p401r_hal::{clock::{CsExt, DcoclkFreqSel, DIVM_A, DIVS_A}, gpio::{Edge, Input, PullUp, GpioExt, InputPin, OutputPin, StatefulOutputPin, ToggleableOutputPin}, pcm::{PcmConfig, PcmDefined, VCoreSel}};
 
 use panic_abort as _;
+
+use lazy_static::lazy_static;
+
+use core::cell::RefCell;
+use cortex_m::interrupt::Mutex;
+
+
+lazy_static! {
+  static ref MUTEX_BUTTON1: Mutex<RefCell<Option<msp432p401r_hal::gpio::porta::P1_4<Input<PullUp>>>>> = Mutex::new(RefCell::new(None));
+  static ref MUTEX_BUTTON2: Mutex<RefCell<Option<msp432p401r_hal::gpio::porta::P1_1<Input<PullUp>>>>> = Mutex::new(RefCell::new(None));
+  static ref COUNTER: Mutex<RefCell<usize>> = Mutex::new(RefCell::new(0));
+}
+
+#[interrupt]
+fn PORT1_IRQ() {
+  cortex_m::interrupt::free(|cs| {
+    let mut counter = COUNTER.borrow(cs).borrow_mut();
+
+    let mut button1 = MUTEX_BUTTON1.borrow(cs).borrow_mut();
+    if button1.as_mut().unwrap().check_interrupt() {
+      button1.as_mut().unwrap().clear_interrupt_pending_bit();
+      *counter = (*counter + 1) % 8;
+    }
+
+    let mut button2 = MUTEX_BUTTON2.borrow(cs).borrow_mut();
+    if button2.as_mut().unwrap().check_interrupt() {
+      button2.as_mut().unwrap().clear_interrupt_pending_bit();
+      *counter = (*counter + 8 - 1) % 8;
+    }
+
+  });
+}
 
 #[entry]
 fn main() -> ! {
@@ -58,34 +90,63 @@ fn main() -> ! {
   let mut rgbled_blue = dio.p2_2.into_output();
   rgbled_blue.try_set_low().unwrap();
 
-  let button1 = dio.p1_4.into_pull_up_input();
-  let button2 = dio.p1_1.into_pull_up_input();
+  let mut button1 = dio.p1_4.into_pull_up_input();
+  let mut button2 = dio.p1_1.into_pull_up_input();
 
-  let mut color = 0;
+  button1.trigger_on_edge(Edge::Rising);
+  button2.trigger_on_edge(Edge::Rising);
+
+  button1.enable_interrupt();
+  button2.enable_interrupt();
+
+  button1.trigger_on_edge(Edge::Falling);
+  button2.trigger_on_edge(Edge::Falling);
+
+  cortex_m::interrupt::free(|cs| {
+    MUTEX_BUTTON1.borrow(cs).replace(Some(button1));
+    MUTEX_BUTTON2.borrow(cs).replace(Some(button2));
+  });
+
+  unsafe {
+    cortex_m::peripheral::NVIC::unmask(msp432p401r::Interrupt::PORT1_IRQ);
+  }
 
   loop {
     // hprintln!("Loop.").unwrap();
 
     led1.try_toggle().unwrap();
 
-    match color {
-      0..=1 => {
-        rgbled_red.try_toggle().unwrap();
-      }
-      2..=3 => {
-        rgbled_green.try_toggle().unwrap();
-      }
-      4..=5 => {
-        rgbled_blue.try_toggle().unwrap();
-      }
-      _ => unreachable!() ,
+    let color = cortex_m::interrupt::free(|cs| {
+      *COUNTER.borrow(cs).borrow()
+    });
+
+    if led1.try_is_set_low().unwrap() && color & 0b100 != 0 {
+      rgbled_red.try_set_high().unwrap();
+    } else {
+      rgbled_red.try_set_low().unwrap();
     }
 
-    color = (color + 1) % 6;
+    if led1.try_is_set_low().unwrap() && color & 0b010 != 0 {
+      rgbled_green.try_set_high().unwrap();
+    } else {
+      rgbled_green.try_set_low().unwrap();
+    }
 
+    if led1.try_is_set_low().unwrap() && color & 0b001 != 0 {
+      rgbled_blue.try_set_high().unwrap();
+    } else {
+      rgbled_blue.try_set_low().unwrap();
+    }
+
+    // color = (color + 1) % 6;
+
+    // hprintln!("Button 1: {}", button1.interrupt_enabled()).unwrap();
+    // hprintln!("Button 2: {}", button2.interrupt_enabled()).unwrap();
+    //
+    //
     // hprintln!("Button 1: {}", button1.try_is_low().unwrap()).unwrap();
     // hprintln!("Button 2: {}", button2.try_is_low().unwrap()).unwrap();
 
-    timer.delay_ms(100);
+    timer.delay_ms(250);
   }
 }

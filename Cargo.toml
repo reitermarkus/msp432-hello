@@ -5,19 +5,19 @@ authors = ["Markus Reiter <me@reitermark.us>"]
 edition = "2018"
 
 [dependencies]
-msp432p401r-pac = "0.1.0"
+msp432p401r-pac = { version = "0.1.0", features = ["rt"]}
 cortex-m = "0.7.1"
 cortex-m-rt = "0.6.11"
 panic-abort = "0.3.2"
 msp432p401r-hal = "0.1.0"
 cortex-m-semihosting = "0.3.7"
 embedded-hal = "0.2.4"
+lazy_static = { version = "1.4.0", features = ["spin_no_std"] }
 
 [profile.dev]
 debug = true
 debug-assertions = true
 opt-level = "s"
-lto = true
 
 [profile.release]
 opt-level = "s"
@@ -26,3 +26,5 @@ lto = true
 [patch.crates-io]
 msp432p401r-hal = { version = "0.1.0", git = "https://github.com/reitermarkus/msp432p401r-hal", branch = "dev" }
 # msp432p401r-hal = { version = "0.1.0", path = "msp432p401r-hal" }
+msp432p401r-pac = { version = "0.1.0", git = "https://github.com/reitermarkus/msp432p401r-pac", branch = "main" }
+# msp432p401r-pac = { version = "0.1.0", path = "msp432p401r-pac" }

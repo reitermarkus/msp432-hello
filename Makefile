@@ -21,7 +21,7 @@ flash: release
 
 .PHONY: dslite
 dslite: release
-	"$(TOOLCHAIN_BIN)/arm-none-eabi-objcopy" -O binary target/$(TARGET)/release/msp432-hello target/$(TARGET)/release/msp432-hello.bin
+	arm-none-eabi-objcopy -O binary target/$(TARGET)/release/msp432-hello target/$(TARGET)/release/msp432-hello.bin
 	dslite --config MSP432P401R.ccxml --verbose --flash --verify target/$(TARGET)/release/msp432-hello.bin,0x0
 
 .PHONY: run
