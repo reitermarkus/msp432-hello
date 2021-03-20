@@ -7,7 +7,7 @@ use cortex_m_semihosting::hprintln;
 
 use msp432p401r::{interrupt, CS};
 use msp432p401r_hal::watchdog::{WatchdogTimer, Enabled, Disable};
-use msp432p401r_hal::{clock::{CsExt, DcoclkFreqSel, DIVM_A, DIVS_A}, gpio::{Edge, Input, PullUp, GpioExt, InputPin, OutputPin, StatefulOutputPin, ToggleableOutputPin}, pcm::{PcmConfig, PcmDefined, VCoreSel}};
+use msp432p401r_hal::{flash::{FlashConfig, FlcDefined, FlWaitSts}, clock::{CsExt, DcoclkFreqSel, DIVM_A, DIVS_A}, gpio::{Edge, Input, PullUp, GpioExt, InputPin, OutputPin, StatefulOutputPin, ToggleableOutputPin}, pcm::{PcmConfig, PcmDefined, VCoreSel}};
 
 use panic_abort as _;
 
@@ -31,13 +31,13 @@ fn PORT1_IRQ() {
     let mut button1 = MUTEX_BUTTON1.borrow(cs).borrow_mut();
     if button1.as_mut().unwrap().check_interrupt() {
       button1.as_mut().unwrap().clear_interrupt_pending_bit();
-      *counter = (*counter + 1) % 8;
+      *counter = (*counter + 1) % 7;
     }
 
     let mut button2 = MUTEX_BUTTON2.borrow(cs).borrow_mut();
     if button2.as_mut().unwrap().check_interrupt() {
       button2.as_mut().unwrap().clear_interrupt_pending_bit();
-      *counter = (*counter + 8 - 1) % 8;
+      *counter = (*counter + 7 - 1) % 7;
     }
 
   });
@@ -55,13 +55,16 @@ fn main() -> ! {
 
   // hprintln!("Power Mode: {:?}", pcm_sel).unwrap();
 
+  let flctl = FlashConfig::<FlcDefined>::new();         // Setup FlashConfig
+  flctl.set_flwaitst(FlWaitSts::_2Ws);                                       // Two wait states -> 48 Mhz Clock
+
 
   let p = msp432p401r::Peripherals::take().unwrap();
 
   // The Digital I/O module
   let dio = p.DIO.split();
 
-  let freq_sel = DcoclkFreqSel::_24MHz;
+  let freq_sel = DcoclkFreqSel::_48MHz;
 
   let _clocks = p.CS.constrain()
       .mclk_dcoclk(freq_sel, DIVM_A::DIVM_0)
@@ -117,7 +120,7 @@ fn main() -> ! {
     led1.try_toggle().unwrap();
 
     let color = cortex_m::interrupt::free(|cs| {
-      *COUNTER.borrow(cs).borrow()
+      *COUNTER.borrow(cs).borrow() + 1
     });
 
     if led1.try_is_set_low().unwrap() && color & 0b100 != 0 {

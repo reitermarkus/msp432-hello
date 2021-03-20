@@ -104,7 +104,7 @@ dependencies = [
 [[package]]
 name = "msp432p401r-hal"
 version = "0.1.0"
-source = "git+https://github.com/reitermarkus/msp432p401r-hal?branch=dev#08f18a9ba1438a8a06c3e8ddd87f207c29f8ad5e"
+source = "git+https://github.com/reitermarkus/msp432p401r-hal?branch=dev#9b7b0f8cf87bf6bcfadc636e48d6ec4dd6d8d3c0"
 dependencies = [
  "cortex-m",
  "cortex-m-rt",
